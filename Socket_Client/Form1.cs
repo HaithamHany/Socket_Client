@@ -14,30 +14,17 @@ namespace Socket_Client
 {
     public partial class Form1 : Form
     {
-        string _serverIp = "localhost";
-        int port = 8080;
-
+        ClientRun _client;
         public Form1()
         {
             InitializeComponent();
+            _client = new ClientRun();
         }
 
         private void submit_Click(object sender, EventArgs e)
         {
-            TcpClient client = new TcpClient(_serverIp, port);
-
-            int byteCount = Encoding.ASCII.GetByteCount(messege.Text); ;
-
-            byte[] sendData = new byte[byteCount];
-
-            sendData = Encoding.ASCII.GetBytes(messege.Text);
-
-            NetworkStream stream = client.GetStream();
-
-            stream.Write(sendData, 0, sendData.Length);
-
-            stream.Close();
-
+            _client.SendMessage(inputMessege.Text, "Haitham");
         }
+
     }
 }
