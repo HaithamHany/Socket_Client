@@ -15,6 +15,7 @@ namespace Socket_Client
         private IPAddress _ipAddr;
         private IPEndPoint _localEndPoint;
         private Socket _sender;
+        private string _id;
         public Socket Sender
         {
             get
@@ -26,6 +27,7 @@ namespace Socket_Client
 
         public ClientRun()
         {
+            _id = Guid.NewGuid().ToString();
             Initialize();
             ConnectClient();
         }
@@ -61,7 +63,7 @@ namespace Socket_Client
 
                 string textToSend = DateTime.Now.ToString();
 
-                byte[] messageSent = Encoding.ASCII.GetBytes(("Client connected " + textToSend+" <EOF>"));
+                byte[] messageSent = Encoding.ASCII.GetBytes((_id+":" + "\n"+textToSend+" <EOF>"));
                 int byteSent = _sender.Send(messageSent);
 
                 // Data buffer 
@@ -100,39 +102,18 @@ namespace Socket_Client
             {
                 //_sender.Connect(_localEndPoint);
                 //creation of msg sent to server
-                byte[] messageSent = Encoding.ASCII.GetBytes((messege + "<EOF>"));
+                byte[] messageSent = Encoding.ASCII.GetBytes((_id+"\n"+messege + "<EOF>"));
 
-                int byteCount = Encoding.ASCII.GetByteCount(messege); ;
+                int byteCount = messageSent.Length;
 
                 byte[] sendData = new byte[byteCount];
 
-                sendData = Encoding.ASCII.GetBytes(messege);
+                sendData = messageSent;
 
 
                 int byteSent = _sender.Send(sendData);
-                byte[] messageReceived = new byte[1024];
-                // byte[] messageReceived = new byte[1024];
 
-                try
-                {
-                    int byteRecive = _sender.Receive(messageReceived);
-                    Form1._lblStatusConnect.Text = Encoding.ASCII.GetString(messageReceived, 0, byteRecive);
-                }
-                catch (ArgumentNullException ane)
-                {
-                    Form1._lblStatusConnect.Text = ane.ToString();
-                }
 
-                catch (SocketException se)
-                {
-                    Form1._lblStatusConnect.Text = se.ToString();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                //Console.WriteLine("Message from Server -> {0}",
-                
 
                 // Close Socket using  
                 // the method Close() 
